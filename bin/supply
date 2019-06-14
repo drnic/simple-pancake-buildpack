@@ -10,6 +10,7 @@ DEPS_IDX=$4
 
 export BUILDPACK_DIR=`dirname $(readlink -f ${BASH_SOURCE%/*})`
 
+echo "-----> Buildpack version $(cat $BUILDPACK_DIR/VERSION)"
 echo "-----> Running simple-pancake-buildpack bin/supply"
 echo "       BUILD_DIR=$BUILD_DIR"
 echo "       CACHE_DIR=$CACHE_DIR"
@@ -23,6 +24,8 @@ echo "BUILD_DIR:"
 ls -al $BUILD_DIR/
 echo "CACHE_DIR:"
 ls -al $CACHE_DIR/
+echo "$DEPS_DIR/$DEPS_IDX:"
+ls -al $DEPS_DIR/$DEPS_IDX/
 
 yj_version=4.0.0
 mkdir -p $CACHE_DIR/bin
@@ -47,12 +50,20 @@ echo "default_download_sha256: $default_download_sha256"
   package=$(ls *)
   echo "$default_download_sha256  $package" | sha256sum -c
 
-  mkdir -p $TMP_DIR/$package_name
-  cd $TMP_DIR/$package_name
+  mkdir -p /tmp/$package_name
+  cd /tmp/$package_name
   tar xfJ $CACHE_DIR/$package_name/$package
-  cp -r */
-  cp -r * $DEPS_DIR/$DEPS_IDX/
+
+  mkdir -p $DEPS_DIR/$DEPS_IDX/bin
+  cp $(ls $package_name*) $DEPS_DIR/$DEPS_IDX/bin/$package_name
+
+  mkdir -p $DEPS_DIR/$DEPS_IDX/profile.d
+  cat > $DEPS_DIR/$DEPS_IDX/profile.d/finalize_pancake.sh <<BASH
+#!/bin/bash
+
+eval "$(cf-pancake exports)"
+BASH
 )
 
 echo "$DEPS_DIR/$DEPS_IDX:"
-ls -al $DEPS_DIR/$DEPS_IDX/
+ls -alR $DEPS_DIR/$DEPS_IDX/
