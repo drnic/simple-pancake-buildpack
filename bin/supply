@@ -28,6 +28,7 @@ else
   echo "Downloading [$yj_uri]"
   curl -sSLO $yj_uri
 fi
+echo "$yj_sha256  yj-linux" | sha256sum -c
 mv yj-linux $CACHE_DIR/bin/yj
 chmod +x $CACHE_DIR/bin/yj
 )
