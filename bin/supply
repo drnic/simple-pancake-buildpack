@@ -23,9 +23,6 @@ echo "BUILD_DIR:"
 ls -al $BUILD_DIR/
 echo "CACHE_DIR:"
 ls -al $CACHE_DIR/
-echo "DEPS_DIR:"
-ls -al $DEPS_DIR/
-
 
 yj_version=4.0.0
 mkdir -p $CACHE_DIR/bin
@@ -50,11 +47,9 @@ echo "default_download_sha256: $default_download_sha256"
   package=$(ls *)
   echo "$default_download_sha256  $package" | sha256sum -c
 
-  (
-    cd $BUILD_DIR
-    tar tfJ $CACHE_DIR/$package_name/$package
-  )
+  cd $DEPS_DIR/$DEPS_IDX
+  tar xfJ $CACHE_DIR/$package_name/$package
 )
 
-echo "BUILD_DIR:"
-ls -al $BUILD_DIR/
+echo "$DEPS_DIR/$DEPS_IDX:"
+ls -al $DEPS_DIR/$DEPS_IDX/
