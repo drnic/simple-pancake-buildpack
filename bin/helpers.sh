@@ -23,9 +23,6 @@ function install_yj() {
 
 function fetch_dependency() {
   PACKAGE_NAME=$1
-  echo "PACKAGE_NAME: $PACKAGE_NAME"
-  echo "CACHE_DIR: $CACHE_DIR"
-  echo "BUILDPACK_DIR: $BUILDPACK_DIR"
 
   mkdir -p $CACHE_DIR/$PACKAGE_NAME
   default_version=$(cat $BUILDPACK_DIR/manifest.yml | yj -y | jq -r --arg name $PACKAGE_NAME '.default_versions[] | select(.name == $name ).version')
