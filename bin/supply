@@ -15,6 +15,7 @@ echo "       BUILD_DIR=$BUILD_DIR"
 echo "       CACHE_DIR=$CACHE_DIR"
 echo "       DEPS_DIR=$DEPS_DIR"
 echo "       DEPS_IDX=$DEPS_IDX"
+echo "       PATH: $PATH"
 echo
 echo "Current dir:"
 ls -al
@@ -25,11 +26,13 @@ ls -al $CACHE_DIR/
 echo "DEPS_DIR:"
 ls -al $DEPS_DIR/
 
+
 set -x
 
 yj_version=4.0.0
-curl -sSL -o .bin/yt https://github.com/sclevine/yj/releases/download/v${yj_version}/yj-linux
-chmod +x .bin/yt
+curl -sSL -o $CACHE_DIR/bin/yt https://github.com/sclevine/yj/releases/download/v${yj_version}/yj-linux
+chmod +x $CACHE_DIR/bin/yt
+export PATH=$CACHE_DIR/bin:$PATH
 
 package_name=cf-pancake
 default_version=$(cat manifest.yml | yt -y  | jq -r --arg name $package_name '.default_versions[] | select(.name == $name ).version')
