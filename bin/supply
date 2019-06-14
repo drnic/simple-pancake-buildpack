@@ -23,3 +23,17 @@ echo "CACHE_DIR:"
 ls $CACHE_DIR/
 echo "DEPS_DIR:"
 ls $DEPS_DIR/
+
+yj_version=4.0.0
+curl -sSL -o .bin/yt https://github.com/sclevine/yj/releases/download/v${yj_version}/yj-linux
+chmod +x .bin/yt
+
+package_name=cf-pancake
+default_version=$(cat manifest.yml | yt -y  | jq -r --arg name $package_name '.default_versions[] | select(.name == $name ).version')
+default_download_uri=$(cat manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).uri')
+default_download_sha256=$(cat manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).sha256')
+
+echo "package_name: $package_name"
+echo "default_version: $default_version"
+echo "default_download_uri: $default_download_uri"
+echo "default_download_sha256: $default_download_sha256"
