@@ -48,5 +48,13 @@ echo "default_download_sha256: $default_download_sha256"
   cd $CACHE_DIR/$package_name
   curl -sSLO $default_download_uri
   package=$(ls *)
-  sha256sum $package
+  echo "$default_download_sha256  $package" | sha256sum -c
+
+  (
+    cd $BUILD_DIR
+    tar tfJ $CACHE_DIR/$package_name/$package
+  )
 )
+
+echo "BUILD_DIR:"
+ls -al $BUILD_DIR/
