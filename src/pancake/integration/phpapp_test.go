@@ -22,5 +22,7 @@ var _ = Describe("PHP app Integration Test", func() {
 		app = cutlass.New(filepath.Join(bpDir, "fixtures", "phpapp"))
 		PushAppAndConfirm(app)
 		Expect(app.GetBody("/")).To(ContainSubstring("PHP Version"))
+		// service instance name is 'db'; assume credentials includes 'uri'
+		Expect(app.GetBody("/")).To(ContainSubstring("DB_URI"))
 	})
 })

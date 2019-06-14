@@ -10,22 +10,7 @@ DEPS_IDX=$4
 
 export BUILDPACK_DIR=`dirname $(readlink -f ${BASH_SOURCE%/*})`
 
-echo "-----> Buildpack version $(cat $BUILDPACK_DIR/VERSION)"
-echo "-----> Running simple-pancake-buildpack bin/supply"
-echo "       BUILD_DIR=$BUILD_DIR"
-echo "       CACHE_DIR=$CACHE_DIR"
-echo "       DEPS_DIR=$DEPS_DIR"
-echo "       DEPS_IDX=$DEPS_IDX"
-echo "       PATH: $PATH"
-echo
-echo "Current dir:"
-ls -al
-echo "BUILD_DIR:"
-ls -al $BUILD_DIR/
-echo "CACHE_DIR:"
-ls -al $CACHE_DIR/
-echo "$DEPS_DIR/$DEPS_IDX:"
-ls -al $DEPS_DIR/$DEPS_IDX/
+echo "-----> Simple Pancake Buildpack version $(cat $BUILDPACK_DIR/VERSION)"
 
 yj_version=4.0.0
 mkdir -p $CACHE_DIR/bin
@@ -38,10 +23,8 @@ default_version=$(cat $BUILDPACK_DIR/manifest.yml | yt -y  | jq -r --arg name $p
 default_download_uri=$(cat $BUILDPACK_DIR/manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).uri')
 default_download_sha256=$(cat $BUILDPACK_DIR/manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).sha256')
 
-echo "package_name: $package_name"
-echo "default_version: $default_version"
-echo "default_download_uri: $default_download_uri"
-echo "default_download_sha256: $default_download_sha256"
+echo "       package_name: $package_name"
+echo "       default_download_uri: $default_download_uri"
 
 (
   mkdir -p $CACHE_DIR/$package_name
@@ -61,9 +44,6 @@ echo "default_download_sha256: $default_download_sha256"
   cat > $DEPS_DIR/$DEPS_IDX/profile.d/finalize_pancake.sh <<BASH
 #!/bin/bash
 
-eval "$(cf-pancake exports)"
+eval "\$(cf-pancake exports)"
 BASH
 )
-
-echo "$DEPS_DIR/$DEPS_IDX:"
-ls -alR $DEPS_DIR/$DEPS_IDX/
