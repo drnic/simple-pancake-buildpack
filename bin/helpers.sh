@@ -42,4 +42,11 @@ function fetch_dependency() {
   fi
 }
 
+function write_profiled() {
+  NAME=$1
+  CONTENTS=$2
+  mkdir -p $DEPS_DIR/$DEPS_IDX/profile.d
+  echo "$CONTENTS" > $DEPS_DIR/$DEPS_IDX/profile.d/$NAME
+}
+
 install_yj

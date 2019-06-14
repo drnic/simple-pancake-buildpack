@@ -26,9 +26,9 @@ source $BUILDPACK_DIR/bin/helpers.sh
   cp cf-pancake* $DEPS_DIR/$DEPS_IDX/bin/cf-pancake
 )
 
-mkdir -p $DEPS_DIR/$DEPS_IDX/profile.d
-cat > $DEPS_DIR/$DEPS_IDX/profile.d/finalize_pancake.sh <<BASH
+write_profiled "finalize_pancake.sh" "$(cat<<BASH
 #!/bin/bash
 
 eval "\$(cf-pancake exports)"
 BASH
+)"
