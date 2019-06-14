@@ -38,15 +38,15 @@ mkdir -p $CACHE_DIR/$package_name
 default_version=$(cat $BUILDPACK_DIR/manifest.yml | yj -y  | jq -r --arg name $package_name '.default_versions[] | select(.name == $name ).version')
 default_download_uri=$(cat $BUILDPACK_DIR/manifest.yml | yj -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).uri')
 default_download_sha256=$(cat $BUILDPACK_DIR/manifest.yml | yj -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).sha256')
+cd $CACHE_DIR/$package_name/
 if [[ -d $BUILDPACK_DIR/dependencies ]]; then
   echo "Using [$(ls $BUILDPACK_DIR/dependencies/*/cf-pancake-linux-amd64.tar.xz)]"
-  cp $BUILDPACK_DIR/dependencies/*/cf-pancake-linux-amd64.tar.xz $CACHE_DIR/$package_name/
+  cp $BUILDPACK_DIR/dependencies/*/cf-pancake-linux-amd64.tar.xz .
 else
   echo "Downloading [$default_download_uri]"
-  ( cd $CACHE_DIR/$package_name/; curl -sSLO $default_download_uri )
+  curl -sSLO $default_download_uri
 fi
 (
-  cd $CACHE_DIR/$package_name/
   package=$(ls *)
   echo "$default_download_sha256  $package" | sha256sum -c
 
