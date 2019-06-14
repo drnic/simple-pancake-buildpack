@@ -1,0 +1,25 @@
+#!/bin/bash
+# This script provides dependencies for an app
+
+
+set -euo pipefail
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+DEPS_DIR=$3
+DEPS_IDX=$4
+
+export BUILDPACK_DIR=`dirname $(readlink -f ${BASH_SOURCE%/*})`
+
+echo "-----> Running simple-pancake-buildpack bin/supply"
+echo "       BUILD_DIR=$BUILD_DIR"
+echo "       CACHE_DIR=$CACHE_DIR"
+echo "       DEPS_DIR=$DEPS_DIR"
+echo "       DEPS_IDX=$DEPS_IDX"
+echo
+echo "BUILD_DIR:"
+ls $BUILD_DIR/
+echo "CACHE_DIR:"
+ls $CACHE_DIR/
+echo "DEPS_DIR:"
+ls $DEPS_DIR/
