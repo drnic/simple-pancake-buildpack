@@ -30,6 +30,7 @@ ls -al $DEPS_DIR/
 set -x
 
 yj_version=4.0.0
+mkdir -p $CACHE_DIR/bin
 curl -sSL -o $CACHE_DIR/bin/yt https://github.com/sclevine/yj/releases/download/v${yj_version}/yj-linux
 chmod +x $CACHE_DIR/bin/yt
 export PATH=$CACHE_DIR/bin:$PATH
