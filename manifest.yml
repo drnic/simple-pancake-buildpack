@@ -21,7 +21,7 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
   - cflinuxfs3
-- name: yt
+- name: yj
   version: 4.0.0
   uri: https://github.com/sclevine/yj/releases/download/v4.0.0/yj-linux
   sha256: 0019875f3f0aa1ea14a0969ce8557789e95fe0307fa1d25ef29ed70ad9874438
