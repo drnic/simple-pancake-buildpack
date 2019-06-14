@@ -47,8 +47,11 @@ echo "default_download_sha256: $default_download_sha256"
   package=$(ls *)
   echo "$default_download_sha256  $package" | sha256sum -c
 
-  cd $DEPS_DIR/$DEPS_IDX
+  mkdir -p $TMP_DIR/$package_name
+  cd $TMP_DIR/$package_name
   tar xfJ $CACHE_DIR/$package_name/$package
+  cp -r */
+  cp -r * $DEPS_DIR/$DEPS_IDX/
 )
 
 echo "$DEPS_DIR/$DEPS_IDX:"
