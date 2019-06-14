@@ -14,17 +14,9 @@ echo "-----> Simple Pancake Buildpack version $(cat $BUILDPACK_DIR/VERSION)"
 
 source $BUILDPACK_DIR/bin/helpers.sh
 
-(
-  fetch_dependency cf-pancake
-  package=$(ls $CACHE_DIR/cf-pancake/*)
+fetch_dependency cf-pancake
 
-  mkdir -p /tmp/cf-pancake
-  cd /tmp/cf-pancake
-  tar xfJ $package
-
-  mkdir -p $DEPS_DIR/$DEPS_IDX/bin
-  cp cf-pancake* $DEPS_DIR/$DEPS_IDX/bin/cf-pancake
-)
+unpack_dep_xz_to_bin $(ls $CACHE_DIR/cf-pancake/*.xz) cf-pancake
 
 write_profiled "finalize_pancake.sh" "$(cat<<BASH
 #!/bin/bash

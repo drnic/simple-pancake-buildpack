@@ -42,6 +42,18 @@ function fetch_dependency() {
   fi
 }
 
+function unpack_dep_xz_to_bin() {
+  ARCHIVE=$1
+  BIN_NAME=$2
+
+  mkdir -p $DEPS_DIR/$DEPS_IDX/bin
+
+  tmp_dir=$(mktemp -d)
+  cd $tmp_dir
+  tar xfJ $ARCHIVE
+  cp * $DEPS_DIR/$DEPS_IDX/bin/$BIN_NAME
+}
+
 function write_profiled() {
   NAME=$1
   CONTENTS=$2
