@@ -15,8 +15,8 @@ function install_yj() {
   else
     echo "Downloading [$yj_uri]"
     curl -sSLO $yj_uri
+    echo "$yj_sha256  yj-linux" | sha256sum -c
   fi
-  echo "$yj_sha256  yj-linux" | sha256sum -c
   mv yj-linux $CACHE_DIR/bin/yj
   chmod +x $CACHE_DIR/bin/yj
 }
@@ -37,9 +37,9 @@ function fetch_dependency() {
   else
     echo "Downloading [$download_uri]"
     curl -sSLO $download_uri
+    package=$(ls *)
+    echo "$download_sha256  $package" | sha256sum -c
   fi
-  package=$(ls *)
-  echo "$download_sha256  $package" | sha256sum -c
 }
 
 install_yj
