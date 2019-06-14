@@ -36,9 +36,9 @@ chmod +x $CACHE_DIR/bin/yt
 export PATH=$CACHE_DIR/bin:$PATH
 
 package_name=cf-pancake
-default_version=$(cat manifest.yml | yt -y  | jq -r --arg name $package_name '.default_versions[] | select(.name == $name ).version')
-default_download_uri=$(cat manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).uri')
-default_download_sha256=$(cat manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).sha256')
+default_version=$(cat $BUILDPACK_DIR/manifest.yml | yt -y  | jq -r --arg name $package_name '.default_versions[] | select(.name == $name ).version')
+default_download_uri=$(cat $BUILDPACK_DIR/manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).uri')
+default_download_sha256=$(cat $BUILDPACK_DIR/manifest.yml | yt -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).sha256')
 
 echo "package_name: $package_name"
 echo "default_version: $default_version"
