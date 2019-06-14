@@ -1,61 +1,29 @@
 #!/bin/bash
 # This script provides dependencies for an app
 
-set -euo pipefail
+set -euox pipefail
 
-BUILD_DIR=$1
-CACHE_DIR=$2
-DEPS_DIR=$3
-DEPS_IDX=$4
+export BUILD_DIR=$1
+export CACHE_DIR=$2
+export DEPS_DIR=$3
+export DEPS_IDX=$4
 
 export BUILDPACK_DIR=`dirname $(readlink -f ${BASH_SOURCE%/*})`
 
 echo "-----> Simple Pancake Buildpack version $(cat $BUILDPACK_DIR/VERSION)"
 
-mkdir -p $CACHE_DIR/bin
-export PATH=$CACHE_DIR/bin:$PATH
+source $BUILDPACK_DIR/bin/helpers.sh
 
 (
-package_name=yj
-mkdir -p $CACHE_DIR/$package_name
-cd $CACHE_DIR/$package_name
-yj_uri=https://github.com/sclevine/yj/releases/download/v4.0.0/yj-linux
-yj_sha256=0019875f3f0aa1ea14a0969ce8557789e95fe0307fa1d25ef29ed70ad9874438
-if [[ -d $BUILDPACK_DIR/dependencies ]]; then
-  echo "Using [$(ls $BUILDPACK_DIR/dependencies/*/yj-linux)]"
-  cp $BUILDPACK_DIR/dependencies/*/yj-linux $CACHE_DIR/$package_name/
-else
-  echo "Downloading [$yj_uri]"
-  curl -sSLO $yj_uri
-fi
-echo "$yj_sha256  yj-linux" | sha256sum -c
-mv yj-linux $CACHE_DIR/bin/yj
-chmod +x $CACHE_DIR/bin/yj
-)
+  fetch_dependency cf-pancake
+  package=$(ls $CACHE_DIR/cf-pancake/*)
 
-package_name=cf-pancake
-mkdir -p $CACHE_DIR/$package_name
-default_version=$(cat $BUILDPACK_DIR/manifest.yml | yj -y  | jq -r --arg name $package_name '.default_versions[] | select(.name == $name ).version')
-default_download_uri=$(cat $BUILDPACK_DIR/manifest.yml | yj -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).uri')
-default_download_sha256=$(cat $BUILDPACK_DIR/manifest.yml | yj -y  | jq -r --arg name $package_name --arg version $default_version '.dependencies[] | select(.name == $name and .version == $version).sha256')
-cd $CACHE_DIR/$package_name/
-if [[ -d $BUILDPACK_DIR/dependencies ]]; then
-  echo "Using [$(ls $BUILDPACK_DIR/dependencies/*/cf-pancake-linux-amd64.tar.xz)]"
-  cp $BUILDPACK_DIR/dependencies/*/cf-pancake-linux-amd64.tar.xz .
-else
-  echo "Downloading [$default_download_uri]"
-  curl -sSLO $default_download_uri
-fi
-(
-  package=$(ls *)
-  echo "$default_download_sha256  $package" | sha256sum -c
-
-  mkdir -p /tmp/$package_name
-  cd /tmp/$package_name
-  tar xfJ $CACHE_DIR/$package_name/$package
+  mkdir -p /tmp/cf-pancake
+  cd /tmp/cf-pancake
+  tar xfJ $package
 
   mkdir -p $DEPS_DIR/$DEPS_IDX/bin
-  cp $(ls $package_name*) $DEPS_DIR/$DEPS_IDX/bin/$package_name
+  cp cf-pancake* $DEPS_DIR/$DEPS_IDX/bin/cf-pancake
 )
 
 mkdir -p $DEPS_DIR/$DEPS_IDX/profile.d
