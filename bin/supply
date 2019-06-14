@@ -27,8 +27,6 @@ echo "DEPS_DIR:"
 ls -al $DEPS_DIR/
 
 
-set -x
-
 yj_version=4.0.0
 mkdir -p $CACHE_DIR/bin
 curl -sSL -o $CACHE_DIR/bin/yt https://github.com/sclevine/yj/releases/download/v${yj_version}/yj-linux
@@ -44,3 +42,11 @@ echo "package_name: $package_name"
 echo "default_version: $default_version"
 echo "default_download_uri: $default_download_uri"
 echo "default_download_sha256: $default_download_sha256"
+
+(
+  mkdir -p $CACHE_DIR/$package_name
+  cd $CACHE_DIR/$package_name
+  curl -sSLO $default_download_uri
+  package=$(ls *)
+  sha256sum $package
+)
